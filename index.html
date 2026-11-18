@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start Tranchi for $1</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Inter+Tight:wght@700;800;900&display=swap" rel="stylesheet">
+<!--
+  TRANCHI PRO — DQ PAGE V2 (Nov 18 2026)
+  Where Typeform sends people who answer B on Q6:
+  "I have less than $4,000 and limited credit"
+
+  Typeform redirect URL (pass hidden fields):
+    https://tranchi.ai/start?name={{first_name}}&goal={{goal}}
+  goal values handled below: wholesale | rentals | income | (anything else = default)
+
+  Replace every href="#checkout" with the $1 Pro checkout link.
+  No video needed: animated AI deal card sits in the hero. (Optional later test: add a 45s founder video.)
+-->
+<style>
+:root{
+  --bg:#0a0f1a; --card:#111827; --line:rgba(255,255,255,.08);
+  --gold:#c9a84c; --gold2:#a08339; --text:#fff; --muted:#94a3b8; --dim:#64748b; --green:#22c55e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:84px}
+a{color:inherit}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+.gold{color:var(--gold)}
+
+/* nav */
+.nav{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.logo{font-weight:900;letter-spacing:1px;color:var(--gold);font-size:18px}
+.nav a.small{font-size:13px;font-weight:700;text-decoration:none;color:var(--gold)}
+
+/* buttons */
+.btn{display:block;text-align:center;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);
+  font-weight:800;font-size:18px;padding:17px 20px;border-radius:12px;text-decoration:none}
+.btn:active{transform:scale(.98)}
+.fine{text-align:center;font-size:13px;color:var(--dim);margin-top:10px}
+
+/* hero */
+.hero{padding:32px 0 8px;text-align:center}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);padding:6px 14px;border-radius:20px;margin-bottom:16px}
+h1{font-size:34px;font-weight:900;line-height:1.1;margin-bottom:14px}
+.hero p{color:var(--muted);font-size:16px;margin-bottom:22px}
+.video{position:relative;aspect-ratio:9/16;max-height:520px;margin:0 auto 22px;border-radius:16px;overflow:hidden;
+  background:linear-gradient(160deg,#1e293b,#0f172a);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;max-width:300px}
+.play{width:64px;height:64px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center}
+.play:after{content:"";border-left:20px solid var(--bg);border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px}
+.video span{font-size:13px;color:var(--muted)}
+
+/* sections */
+section{padding:40px 0;border-top:1px solid var(--line)}
+.label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+h2{font-size:26px;font-weight:800;line-height:1.2;margin-bottom:20px}
+
+/* steps */
+.step{display:flex;gap:14px;margin-bottom:18px}
+.num{flex:0 0 34px;height:34px;border-radius:50%;background:rgba(201,168,76,.12);border:1px solid var(--gold);color:var(--gold);
+  font-weight:800;display:flex;align-items:center;justify-content:center}
+.step h3{font-size:16px;font-weight:700;margin-bottom:2px}
+.step p{font-size:14px;color:var(--muted)}
+
+/* includes */
+.list{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:flex;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);font-size:15px}
+.row:last-child{border-bottom:none}
+.row b{color:var(--gold);white-space:nowrap;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font-size:13px;padding:6px 12px;border-radius:20px;background:var(--card);border:1px solid var(--line);color:var(--muted)}
+
+/* locked deals */
+.deals{display:grid;gap:12px}
+.deal{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.deal .tag{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+.deal .price{font-size:24px;font-weight:900;margin:4px 0}
+.deal .meta{font-size:13px;color:var(--muted)}
+.deal .nums{display:flex;gap:16px;margin-top:10px;font-size:13px}
+.deal .nums b{display:block;font-size:15px}
+.lock{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;color:var(--dim);border:1px solid var(--line);padding:4px 8px;border-radius:8px}
+.note{font-size:13px;color:var(--dim);margin-top:12px}
+
+/* proof */
+.quote{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:12px}
+.quote p{font-size:15px;margin-bottom:8px}
+.quote span{font-size:13px;color:var(--gold);font-weight:700}
+.trust{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.trust div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;font-size:13px;color:var(--muted)}
+.trust b{display:block;color:var(--text);font-size:16px}
+.press{text-align:center;font-size:12px;letter-spacing:2px;color:var(--dim);margin-top:16px;font-weight:700}
+
+/* faq */
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+summary{padding:16px;font-weight:700;font-size:15px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--gold);font-size:20px;line-height:1}
+details[open] summary:after{content:"–"}
+details p{padding:0 16px 16px;color:var(--muted);font-size:14px}
+
+/* sticky mobile cta */
+.sticky{position:fixed;left:0;right:0;bottom:0;background:rgba(10,15,26,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:12px 16px}
+.sticky .btn{max-width:640px;margin:0 auto;font-size:16px;padding:14px}
+@media(min-width:700px){h1{font-size:44px}.deals{grid-template-columns:1fr 1fr 1fr}}
+
+/* animated AI card */
+.ai-photo{position:relative;margin:-16px -16px 14px;aspect-ratio:16/9;background:linear-gradient(160deg,#1e293b,#0f172a);background-size:cover;background-position:center;border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:center}
+.ai-ph{font-size:44px;opacity:.35}
+.ai-photo[data-loaded] .ai-ph{display:none}
+.ai-live{position:absolute;top:10px;left:10px;font-size:11px;font-weight:800;background:rgba(10,15,26,.85);color:var(--green);padding:5px 9px;border-radius:7px;display:none}
+.ai-photo[data-loaded] .ai-live{display:block}
+.ai-card{overflow:hidden;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 auto 8px;max-width:400px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.ai-top{font-size:12px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.ai-tag{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold)}
+.ai-price{font-size:26px;font-weight:900;margin:2px 0 12px}
+.ai-price small{font-size:13px;color:var(--muted);font-weight:500}
+.ai-row{display:flex;justify-content:space-between;font-size:14px;padding:9px 0;border-top:1px solid var(--line);opacity:0;animation:in .5s forwards;animation-delay:var(--d)}
+.ai-row span{color:var(--muted)}
+.ai-row.hl b{color:var(--green);font-size:17px}
+.ai-foot{font-size:12px;color:var(--green);font-weight:700;margin-top:10px;opacity:0;animation:in .5s forwards;animation-delay:var(--d)}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.proof-line{font-size:14px;color:var(--muted);margin:-8px 0 20px}
+.proof-line b{color:var(--gold)}
+.ai-note{font-size:12px;color:var(--dim);margin-bottom:22px}
+@media (prefers-reduced-motion:reduce){.ai-row,.ai-foot{animation:none;opacity:1}.ai-dot{animation:none}}
+
+/* real deals carousel */
+.rd-row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 8px;-webkit-overflow-scrolling:touch}
+.rd-row::-webkit-scrollbar{display:none}
+.rd{flex:0 0 78%;max-width:300px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.rd-img{position:relative;aspect-ratio:16/10;background-size:cover;background-position:center}
+.rd-type{position:absolute;top:10px;left:10px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:rgba(10,15,26,.82);color:#fff;padding:5px 9px;border-radius:7px}
+.rd-lock{position:absolute;bottom:10px;right:10px;font-size:11px;font-weight:700;background:rgba(10,15,26,.82);color:var(--gold);padding:5px 9px;border-radius:7px}
+.rd-b{padding:12px 14px 14px}
+.rd-b small{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.rd-p{font-size:26px;font-weight:900;line-height:1.1}
+.rd-v{font-size:14px;color:var(--muted);margin:4px 0}
+.rd-v b{color:var(--green)}
+.rd-c{font-size:13px;color:var(--dim)}
+
+/* ===== LIGHT THEME — matches tranchi.ai (Nov 18) ===== */
+:root{--bg:#faf8f3;--card:#ffffff;--line:#e8e3d7;--gold:#c4a24c;--gold2:#a8862f;--text:#1b2a4e;--muted:#4b5568;--dim:#7a8291;--green:#16a34a;--navy:#1b2a4e}
+body{font-family:'DM Sans',sans-serif;
+  background-color:var(--bg);
+  background-image:linear-gradient(rgba(27,42,78,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(27,42,78,.045) 1px,transparent 1px);
+  background-size:56px 56px}
+h1,h2{font-family:'Inter Tight',sans-serif;letter-spacing:-.02em;color:var(--navy)}
+h1{font-weight:900}
+.topbar{background:var(--navy);color:#fff;text-align:center;font-size:13px;font-weight:700;padding:9px 16px}
+.topbar span{color:#4ade80;margin-left:8px}
+.nav{background:rgba(250,248,243,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.logo{color:var(--navy)}
+.nav a.small{background:linear-gradient(135deg,#d4b45e,var(--gold));color:var(--navy);padding:8px 14px;border-radius:10px}
+.btn{color:var(--navy);background:linear-gradient(135deg,#d6b660,var(--gold));box-shadow:0 6px 18px rgba(196,162,76,.3)}
+.badge{color:#15803d;background:#ecfdf3;border-color:#bbf7d0}
+.gold{color:var(--gold)}
+.card-shadow,.ai-card{box-shadow:0 12px 30px rgba(27,42,78,.08)}
+.ai-photo{background:linear-gradient(160deg,#eef0f5,#dfe3ec)}
+.ai-ph{opacity:.5}
+.ai-photo{display:none}
+.ai-photo[data-loaded]{display:flex}
+@media(max-width:520px){.topbar .tb1{display:none}.topbar span{margin-left:0}}
+.list,.quote,details,.deal,.trust div,.rd{box-shadow:0 2px 10px rgba(27,42,78,.04)}
+.row b{color:var(--gold2)}
+.chip{background:#fff;color:var(--muted)}
+.num{background:#fbf5e4;color:var(--gold2);border-color:var(--gold)}
+.label{color:var(--gold2)}
+.press{color:var(--dim)}
+.sticky{background:rgba(250,248,243,.95);border-top:1px solid var(--line)}
+.proof-line b{color:var(--gold2)}
+.ai-live{background:rgba(255,255,255,.92)}
+section{border-top-color:var(--line)}
+
+/* flip story card */
+.ai-title{font-family:'Inter Tight',sans-serif;font-size:22px;font-weight:800;color:var(--navy);margin:2px 0 12px;letter-spacing:-.01em}
+.ai-title .g,.fm .g{color:var(--green)}
+.fl{position:relative}
+.fs{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);opacity:0;animation:in .5s forwards;animation-delay:var(--d)}
+.fn{flex:0 0 28px;height:28px;border-radius:50%;background:#fbf5e4;border:1px solid var(--gold);color:var(--gold2);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.fs b{display:block;font-size:15px;color:var(--navy);margin-bottom:2px}
+.fs p{font-size:13.5px;color:var(--muted);line-height:1.45}
+.fs s{color:var(--dim)}
+.fm{margin-top:8px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fm b{display:inline;font-size:13px}
+.fs.hl{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:12px;margin-top:4px}
+.fs.hl .fn{background:#16a34a;border-color:#16a34a;color:#fff}
+@media (prefers-reduced-motion:reduce){.fs{animation:none;opacity:1}}
+
+/* listing block */
+.lst-ill{position:relative;margin:-16px -16px 14px;height:150px;background:linear-gradient(180deg,#e9eef6,#f6f3ea);border-bottom:1px solid var(--line)}
+.ai-photo[data-loaded] ~ .lst-ill{display:none}
+.lst-badge{position:absolute;top:10px;left:10px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:var(--navy);color:#fff;padding:5px 9px;border-radius:7px}
+.lst-ex{position:absolute;top:10px;right:10px;font-size:11px;font-weight:700;background:#fff;color:var(--dim);border:1px solid var(--line);padding:4px 8px;border-radius:7px}
+.lst-dom{font-size:12px;font-weight:700;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;display:inline-block;padding:4px 9px;border-radius:7px;margin-bottom:8px}
+.lst-price{font-family:'Inter Tight',sans-serif;font-size:30px;font-weight:900;color:var(--navy);line-height:1.05}
+.lst-price small{display:block;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim)}
+.lst-meta{font-size:13px;color:var(--muted);margin:4px 0 12px}
+.lst-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lst-grid div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.lst-grid small{display:block;font-size:11px;color:var(--dim)}
+.lst-grid b{font-size:16px;color:var(--navy)}
+.lst-grid .win{background:#f0fdf4;border-color:#bbf7d0}
+.lst-grid .win b{color:var(--green)}
+</style>
+</head>
+<body>
+
+<div class="topbar"><b class="tb1">AI-Powered Real Estate Investing</b> <span>✓ No money needed to flip</span></div>
+<div class="nav">
+  <div class="logo">TRANCHI</div>
+  <a class="small" href="#checkout">Start for $1 →</a>
+</div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">🔓 AI Contract Flipping unlocked</div>
+    <h1><span id="hi"></span><span id="f1">F</span>lip your first contract for <span class="gold">$10K+</span></h1>
+    <p id="sub">You don't need the $4,000 program to start. Tranchi's AI finds motivated sellers, you lock the house under contract, then assign it to a cash buyer for a fee. No money, no credit, no buying the house. Start today for $1.</p>
+    <p class="proof-line">⭐ Caleb, 16, flipped his first contract for <b>$15K in 3 weeks</b>.</p>
+
+    <!-- Animated AI deal card (replaces video VSL) -->
+    <div class="ai-card" aria-label="Example of Tranchi analyzing a deal">
+      <!-- HERO DEAL PHOTO: drop a real Pro deal photo at tranchi-deal-photos/hero-deal.jpg
+           and update the numbers below to that deal's real numbers. Until then the house icon shows. -->
+      <div class="ai-photo" style="background-image:url('tranchi-deal-photos/hero-deal.jpg')"><span class="ai-ph">🏠</span><span class="ai-live">● Found this week</span></div>
+      <!-- illustrated header, shown until a real deal photo is added -->
+      <div class="lst-ill" aria-hidden="true">
+        <svg viewBox="0 0 320 150" width="100%" height="100%" preserveAspectRatio="xMidYMax meet">
+          <rect x="0" y="122" width="320" height="28" fill="#dfe7d2"/>
+          <rect x="96" y="66" width="128" height="58" rx="2" fill="#f4efe4" stroke="#c9bfa8"/>
+          <path d="M84 70 L160 24 L236 70 Z" fill="#8b98ad"/>
+          <rect x="146" y="88" width="26" height="36" fill="#b8a27a"/>
+          <rect x="108" y="80" width="26" height="22" fill="#cfd8e6" stroke="#9aa7bb"/>
+          <rect x="186" y="80" width="26" height="22" fill="#cfd8e6" stroke="#9aa7bb"/>
+          <rect x="226" y="94" width="58" height="26" rx="3" fill="#fff" stroke="#c4a24c"/><rect x="254" y="120" width="2" height="6" fill="#c4a24c"/>
+          <text x="255" y="111" font-size="9" text-anchor="middle" fill="#a8862f" font-family="DM Sans" font-weight="700">FOR SALE</text>
+          <rect x="248" y="124" width="4" height="0"/>
+        </svg>
+        <span class="lst-badge">Stale listing</span><span class="lst-ex">Example</span>
+      </div>
+
+      <!-- THE LISTING -->
+      <div class="lst">
+        <div class="lst-dom">⏱ 112 days on market · price cut twice</div>
+        <div class="lst-price"><small>Listed at</small>$109,900</div>
+        <div class="lst-meta">3 bd · 1 ba · 1,240 sqft · Ohio</div>
+        <div class="lst-grid">
+          <div><small>After-repair value</small><b>$150,000</b></div>
+          <div><small>Est. repairs</small><b>$12,000</b></div>
+          <div><small>Tranchi offer</small><b>$81,900</b></div>
+          <div class="win"><small>Your flip fee</small><b>~$11,100</b></div>
+        </div>
+      </div>
+
+      <div class="ai-top" style="margin-top:16px"><span class="ai-dot"></span> Tranchi AI · here's how it got there</div>
+      <div class="fl">
+        <div class="fs" style="--d:.3s"><div class="fn">1</div><div>
+          <b>The seller is stuck</b>
+          <p>Listed at <s>$109,900</s>. No offers in 112 days, price cut twice. They just want it sold.</p></div></div>
+        <div class="fs" style="--d:1s"><div class="fn">2</div><div>
+          <b>Tranchi writes your offer: $81,900</b>
+          <p>Cash, as-is, close in 30 days. No repairs, no showings, no more waiting. That's why a tired seller says yes.</p></div></div>
+        <div class="fs" style="--d:1.7s"><div class="fn">3</div><div>
+          <b>A cash buyer pays $93,000</b>
+          <p>Fixed up it's worth $150,000 and needs $12,000 of work. Investors pay up to 70% of that value minus repairs:</p>
+          <div class="fm">70% × $150,000 − $12,000 = <b>$93,000</b></div></div></div>
+        <div class="fs hl" style="--d:2.4s"><div class="fn">$</div><div>
+          <b>You keep the difference</b>
+          <p>You sell your contract to the buyer for $93,000. The seller still gets their $81,900. The gap is your fee, and you never buy the house.</p>
+          <div class="fm">$93,000 − $81,900 = <b class="g">$11,100</b></div></div></div>
+      </div>
+      <div class="ai-foot" style="--d:3.2s">✓ Tranchi runs this math on every deal in 15 seconds</div>
+    </div>
+    <p class="ai-note">Example deal. Your real deals unlock inside.</p>
+
+    <a class="btn" href="#checkout">Start flipping for $1</a>
+    <div class="fine">Then $97/month · Cancel anytime · Results vary by deal</div>
+  </div>
+
+  <!-- THE PATH -->
+  <section>
+    <div class="label">The path</div>
+    <h2>Make money first. <span class="gold">Upgrade later.</span></h2>
+
+    <div class="step"><div class="num">1</div><div>
+      <h3>Browse 10 real deals a month</h3>
+      <p id="step1">Stale listings, expired listings and FSBO homes are where motivated sellers hide. They're the best on-market deals to flip, and they're all in Pro.</p>
+    </div></div>
+
+    <div class="step"><div class="num">2</div><div>
+      <h3>Send 1 offer a day</h3>
+      <p>The AI underwrites the deal in 15 seconds and writes the offer for you.</p>
+    </div></div>
+
+    <div class="step"><div class="num">3</div><div>
+      <h3>Land your first deal, then upgrade</h3>
+      <p>Your Pro payments count toward the full program when you're ready.</p>
+    </div></div>
+  </section>
+
+  <!-- WHAT'S INCLUDED -->
+  <section>
+    <div class="label">Tranchi Pro</div>
+    <h2>What you get for $1</h2>
+    <div class="list">
+      <div class="row">Real on-market deals <b>10 / month</b></div>
+      <div class="row">AI deal analysis (15 sec) <b>10 / month</b></div>
+      <div class="row">AI-written offers <b>1 / day</b></div>
+      <div class="row">AI credits <b>50 / month</b></div>
+      <div class="row">Rental comps + DSCR numbers <b>✓</b></div>
+      <div class="row">Built-in CRM <b>✓</b></div>
+    </div>
+    <div class="chips">
+      <span class="chip">Turnkey / Section 8</span>
+      <span class="chip">Stale 60+ days</span>
+      <span class="chip">Expired</span>
+      <span class="chip">FSBO</span>
+      <span class="chip">Value add / distressed</span>
+    </div>
+  </section>
+
+  <!-- LOCKED TEASER: real deals from the platform (Nov 18 2026) -->
+  <section>
+    <div class="label">Found by Tranchi this week</div>
+    <h2>Houses from <span class="gold">$1,600</span></h2>
+    <p class="note" style="margin:-8px 0 14px">Real deals the AI pulled this week. Start with on-market deals in Pro, then upgrade to unlock these. Swipe →</p>
+    <div class="rd-row">
+      <div class="rd"><div class="rd-img" style="background-image:url('tranchi-deal-photos/philly.jpg')"><span class="rd-type">Tax sale</span><span class="rd-lock">Upgrade</span></div>
+        <div class="rd-b"><small>Opening bid</small><div class="rd-p">$1,600</div><div class="rd-v">Est. value <b>$151,588</b></div><div class="rd-c">Philadelphia, PA</div></div></div>
+      <div class="rd"><div class="rd-img" style="background-image:url('tranchi-deal-photos/peoria.jpg')"><span class="rd-type">Pre-foreclosure</span><span class="rd-lock">Upgrade</span></div>
+        <div class="rd-b"><small>Assessed value</small><div class="rd-p">$13,650</div><div class="rd-v">Est. value <b>$64,266</b></div><div class="rd-c">Peoria, IL · 5 bd · vacant</div></div></div>
+      <div class="rd"><div class="rd-img" style="background-image:url('tranchi-deal-photos/syracuse.jpg')"><span class="rd-type">Auction</span><span class="rd-lock">Upgrade</span></div>
+        <div class="rd-b"><small>Opening bid</small><div class="rd-p">$14,500</div><div class="rd-v">Est. value <b>$92,247</b></div><div class="rd-c">Syracuse, NY · 4 bd · no mortgage</div></div></div>
+      <div class="rd"><div class="rd-img" style="background-image:url('tranchi-deal-photos/detroit-young.jpg')"><span class="rd-type">Pre-foreclosure</span><span class="rd-lock">Upgrade</span></div>
+        <div class="rd-b"><small>Assessed value</small><div class="rd-p">$15,600</div><div class="rd-v">Est. value <b>$43,038</b></div><div class="rd-c">Detroit, MI · 4 bd · owner lives elsewhere</div></div></div>
+      <div class="rd"><div class="rd-img" style="background-image:url('tranchi-deal-photos/camden.jpg')"><span class="rd-type">Pre-foreclosure</span><span class="rd-lock">Upgrade</span></div>
+        <div class="rd-b"><small>Assessed value</small><div class="rd-p">$17,500</div><div class="rd-v">Est. value <b>$87,569</b></div><div class="rd-c">Camden, NJ · Lis pendens filed</div></div></div>
+      <div class="rd"><div class="rd-img" style="background-image:url('tranchi-deal-photos/parma.jpg')"><span class="rd-type">Tax deed</span><span class="rd-lock">Upgrade</span></div>
+        <div class="rd-b"><small>Tax sale amount</small><div class="rd-p">$18,537</div><div class="rd-v">Est. value <b>$173,500</b></div><div class="rd-c">Parma, OH · 3 bd · no mortgage</div></div></div>
+      <div class="rd"><div class="rd-img" style="background-image:url('tranchi-deal-photos/n-charleston.jpg')"><span class="rd-type">Pre-foreclosure</span><span class="rd-lock">Upgrade</span></div>
+        <div class="rd-b"><small>Assessed value</small><div class="rd-p">$18,600</div><div class="rd-v">Est. value <b>$148,049</b></div><div class="rd-c">N. Charleston, SC · 2 bd · owner lives elsewhere</div></div></div>
+      <div class="rd"><div class="rd-img" style="background-image:url('tranchi-deal-photos/detroit-richton.jpg')"><span class="rd-type">Pre-foreclosure</span><span class="rd-lock">Upgrade</span></div>
+        <div class="rd-b"><small>Assessed value</small><div class="rd-p">$24,000</div><div class="rd-v">Est. value <b>$97,682</b></div><div class="rd-c">Detroit, MI · 4 bd · notice of default</div></div></div>
+    </div>
+    <p class="note">Pro includes on-market deals (stale, expired, FSBO, turnkey, value add). Pre-foreclosures, tax deeds and auctions unlock when you upgrade. Addresses unlock inside.</p>
+  </section>
+
+  <!-- PROOF -->
+  <section>
+    <div class="label">Started where you are</div>
+    <h2>Real people. Real results.</h2>
+    <div class="quote"><p>"Placed 30-40 offers a week, got one accepted at $80K and flipped it for $95K. $15K in 3 weeks."</p><span>Caleb · age 16 · zero money down</span></div>
+    <div class="quote"><p>"Regular guy working a 9-to-5. In two months I made almost $50,000 with AI wholesaling."</p><span>Nate · $50K in 2 months</span></div>
+    <div class="trust">
+      <div><b>4.6 ★</b>Google reviews</div>
+      <div><b>A+</b>BBB rating</div>
+      <div><b>$2B</b>Lending fund</div>
+      <div><b>Wall St.</b>New York</div>
+    </div>
+    <div class="press">FORBES · YAHOO FINANCE · NBC · HUFFPOST</div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="label">Questions</div>
+    <h2>Quick answers</h2>
+    <details><summary>Do I need money to start?</summary><p>No. $1 today, then $97/month. Flipping contracts doesn't require buying the property. You lock it under contract and assign it to a buyer.</p></details>
+    <details><summary>Can I cancel?</summary><p>Yes, anytime. No contract.</p></details>
+    <details><summary>What happens when I want the full program?</summary><p>Book a strategy call from inside Tranchi. Your Pro payments count toward the upgrade.</p></details>
+    <details><summary>Is Tranchi legit?</summary><p>Built by Munoz &amp; Ghezlan Capital, a mortgage company on Wall Street. 4.6★ on Google, A+ BBB, featured in Forbes, Yahoo Finance, NBC and HuffPost.</p></details>
+  </section>
+
+  <section style="text-align:center">
+    <h2>See what the AI finds. <span class="gold">Today.</span></h2>
+    <a class="btn" href="#checkout">Start Tranchi Pro for $1</a>
+    <div class="fine">Then $97/month · Cancel anytime</div>
+  </section>
+
+</div>
+
+<div class="sticky"><a class="btn" href="#checkout">Start for $1 · Cancel anytime</a></div>
+
+<script>
+// Hero photo: mark loaded only if the real deal photo exists
+(function(){var el=document.querySelector('.ai-photo');if(!el)return;var i=new Image();i.onload=function(){el.setAttribute('data-loaded','');var n=document.querySelector('.ai-note');if(n)n.textContent='Real deal found by Tranchi this week. Confirm availability before acting.';};i.src='tranchi-deal-photos/hero-deal.jpg';})();
+// Personalize from Typeform hidden fields: ?name=Jay&goal=wholesale
+(function(){
+  try{
+    var q=new URLSearchParams(location.search);
+    var name=(q.get('name')||'').replace(/[^a-zA-Z' -]/g,'').trim().slice(0,20);
+    if(name){document.getElementById('hi').textContent=name+', ';document.getElementById('f1').textContent='f';}
+    var goal=(q.get('goal')||'').toLowerCase();
+    var sub=document.getElementById('sub');
+    if(goal.indexOf('rent')>-1||goal.indexOf('passive')>-1){
+      sub.textContent="Want rentals? Most investors start by flipping contracts to stack cash first. Tranchi's AI finds motivated sellers, you assign the contract to a cash buyer for a fee, then use it toward your first rental. Start today for $1.";
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
