@@ -461,6 +461,24 @@ section{border-top-color:var(--line)}
     }
   }catch(e){}
 })();
+
+// Checkout: send them straight to the $1 pay link with name/email/phone pre-filled
+var CHECKOUT_URL = '#checkout'; // ← $1 Pro checkout (Stripe Payment Link or GHL order form)
+(function(){
+  try{
+    var q=new URLSearchParams(location.search), keep={};
+    ['name','first_name','email','phone','goal','state','utm_source','utm_medium','utm_campaign','v'].forEach(function(k){var v=q.get(k);if(v)keep[k]=v;});
+    if(keep.name&&!keep.first_name)keep.first_name=keep.name;
+    // Stripe Payment Links prefill email with prefilled_email
+    if(keep.email)keep.prefilled_email=keep.email;
+    var qs=Object.keys(keep).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(keep[k])}).join('&');
+    var url=CHECKOUT_URL+(qs?(CHECKOUT_URL.indexOf('?')>-1?'&':'?')+qs:'');
+    [].forEach.call(document.querySelectorAll('a[href="#checkout"]'),function(a){
+      a.setAttribute('href',url);
+      a.addEventListener('click',function(){try{(window.dataLayer=window.dataLayer||[]).push({event:'checkout_click',page:'pro-dq-v2'})}catch(e){}});
+    });
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
